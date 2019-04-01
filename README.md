@@ -1,34 +1,38 @@
-# Unity (Un)Installer Template
-Unity Installer allows 1 zip to work for multiple devices and root solutions. [More details in support thread](https://forum.xda-developers.com/apps/magisk/module-audio-modification-library-t3579612).
+<h1 align="center">Unity (Un)Installer Template</h1>
+
+<div align="center">
+  <!-- Version -->
+    <img src="https://img.shields.io/badge/Version-v4.0-blue.svg?longCache=true&style=popout-square"
+      alt="Version" />
+  <!-- Last Updated -->
+    <img src="https://img.shields.io/badge/Updated-March 31, 2019-green.svg?longCache=true&style=flat-square"
+      alt="_time_stamp_" />
+</div>
+
+<div align="center">
+  <strong>Unity Installer allows 1 zip to work for multiple devices and root solutions. [More details in the wiki](https://github.com/Zackptg5/Unity/wiki)</strong>
+</div>
+
+<div align="center">
+  <h3>
+    <a href="https://github.com/Zackptg5/Unity">
+      Source Code
+    </a>
+    <span> | </span>
+    <a href="https://github.com/Zackptg5/Unity-Addons">
+      Addons Repository
+    </a>
+    <span> | </span>
+    <a href="https://forum.xda-developers.com/apps/magisk/module-audio-modification-library-t3579612">
+      XDA
+    </a>
+<!--     <span> | </span>
+    <a href="">
+      Discord
+    </a> -->
+  </h3>
+</div>
 
 ## Compatibility
-* Android Jellybean+
-* Selinux enforcing
-* All root solutions (requires init.d support if not using magisk or supersu. Try [Init.d Injector](https://forum.xda-developers.com/android/software-hacking/mod-universal-init-d-injector-wip-t3692105))
-
-## Change Log
-### v1.4.1 - x.xx.2018
-* Don't use dynamic oreo for system kernel modules
-* Fix prop file permissions for system installs
-
-### v1.4 - 3.18.2018
-* Remove redundant code
-* Don't use install binary anymore since it's weird on some devices
-* Install apps to priv-app if /vendor/app folder doesn't exist
-* Misc improvements
-
-### v1.3 - 2.25.2018
-* Fix seg faults on system installs
-
-### v1.2 - 2.16.2018
-* Fine tune prop logic
-* Update util_functions with magisk 15.4 stuff
-
-### v1.1 - 2.7.2018
-* Bootmode fixes
-
-### v1.0 - 2.5.2018
-* Initial release
-
-## Source Code
-* Module [GitHub](https://github.com/Zackptg5/Unity)
+* Magisk 18+
+* All other root solutions/rootless (requires init.d support for boot scripts if not using magisk or supersu. Try [Init.d Injector](https://forum.xda-developers.com/android/software-hacking/mod-universal-init-d-injector-wip-t3692105))
