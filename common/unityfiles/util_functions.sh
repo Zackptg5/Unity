@@ -143,8 +143,9 @@ debug_log() {
 }
 
 cleanup() {
-  cd /
-  [ -d "$RD" ] && repack_ramdisk
+  if [ -d "$TMPDIR/addon/AnyKernel3/split_img" ]; then
+    $OG_AK && { flash_boot; flash_dtbo; } || write_boot
+  fi
   if $MAGISK; then
     imageless_magisk || unmount_magisk_img
     ui_print " "
@@ -293,7 +294,7 @@ set_vars() {
   else
     ORIGVEN=$ORIGDIR/vendor
   fi
-  SYS=/system; VEN=/system/vendor; RD=$UF/boot/ramdisk; INFORD="$RD/$MODID-files"; SHEBANG="#!/system/bin/sh"
+  SYS=/system; VEN=/system/vendor; RD=$TMPDIR/addon/AnyKernel3/ramdisk; INFORD="$RD/$MODID-files"; SHEBANG="#!/system/bin/sh"
   [ $API -lt 26 ] && DYNLIB=false
   $DYNLIB && { LIBPATCH="\/vendor"; LIBDIR=$VEN; } || { LIBPATCH="\/system"; LIBDIR=/system; }  
   if ! $MAGISK || $SYSOVER; then
@@ -555,7 +556,7 @@ unity_install() {
   done
   
   # Sepolicy
-  $DIRSEPOL && [ ! -d $TMPDIR/addon/Ramdisk-Patcher ] && { ui_print "   ! Ramdisk-Patcher required but not found!"; ui_print "   ! It's required for direct sepolicy patching"; ui_print "   ! Will use boot script instead"; DIRSEPOL=false; }
+  $DIRSEPOL && [ ! -d $TMPDIR/addon/AnyKernel3 ] && { ui_print "   ! AK3 required but not found!"; ui_print "   ! It's required for direct sepolicy patching"; ui_print "   ! Will use boot script instead"; DIRSEPOL=false; }
   
   if ! $DIRSEPOL && [ -s $TMPDIR/common/sepolicy.sh ]; then
     [ "$NVBASE" == "/system/etc/init.d" -o "$MAGISK" == "true" ] && echo -n "magiskpolicy --live" >> $TMPDIR/common/service.sh || echo -n "supolicy --live" >> $TMPDIR/common/service.sh
