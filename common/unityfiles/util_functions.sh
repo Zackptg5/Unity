@@ -735,7 +735,7 @@ unity_main() {
     $BOOTMODE && { ui_print "  ! Magisk manager isn't supported!"; abort "   ! Flash in TWRP !"; }
     unity_upgrade -s
   elif [ -f "$MOD_VER" ]; then
-    if [ -d "$RD" ] && [ ! "$(grep "#$MODID-UnityIndicator" $RD/init.rc 2>/dev/null)" ]; then
+    if [ -d "$RD" ] && ! $OG_AK && (($SYSTEM_ROOT_RD && [ ! "$(grep "#$MODID-UnityIndicator" /system/init.rc 2>/dev/null)" ]) || (! $SYSTEM_ROOT_RD && [ ! "$(grep "#$MODID-UnityIndicator" $RD/init.rc 2>/dev/null)" ])); then
       ui_print "  ! Mod present in system but not in ramdisk!"
       ui_print "  ! Running upgrade..."
       unity_upgrade
