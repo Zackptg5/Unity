@@ -386,7 +386,7 @@ cp_ch() {
   $FOL && OFILES=$(find $SRC -type f 2>/dev/null)
   [ -z $3 ] && PERM=0644 || PERM=$3
   case "$DEST" in
-    $RD/*) BAKFILE=$INFORD;;
+    $RD/*) [ "$RD" != "/system" ] && BAKFILE=$INFORD;;
     $TMPDIR/*|/data/adb/*|$MODULEROOT/*|/sbin/.magisk/img/*) BAK=false;;
   esac
   for OFILE in ${OFILES}; do
@@ -735,7 +735,7 @@ unity_main() {
     $BOOTMODE && { ui_print "  ! Magisk manager isn't supported!"; abort "   ! Flash in TWRP !"; }
     unity_upgrade -s
   elif [ -f "$MOD_VER" ]; then
-    if [ -d "$RD" ] && ! $OG_AK && (($SYSTEM_ROOT_RD && [ ! "$(grep "#$MODID-UnityIndicator" /system/init.rc 2>/dev/null)" ]) || (! $SYSTEM_ROOT_RD && [ ! "$(grep "#$MODID-UnityIndicator" $RD/init.rc 2>/dev/null)" ])); then
+    if [ -d "$TMPDIR/addon/AnyKernel3/ramdisk" ] && ! $OG_AK && [ ! "$(grep "#$MODID-UnityIndicator" $RD/init.rc 2>/dev/null)" ]; then
       ui_print "  ! Mod present in system but not in ramdisk!"
       ui_print "  ! Running upgrade..."
       unity_upgrade
