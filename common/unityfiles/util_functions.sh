@@ -592,8 +592,8 @@ unity_install() {
   
   # Install files
   $IS64BIT || rm -rf $TMPDIR/system/lib64 $TMPDIR/system/vendor/lib64
-  [ -d "/system/priv-app" ] || mv -f $TMPDIR/system/priv-app $TMPDIR/system/app 
-  [ -d "/system/xbin" ] || mv -f $TMPDIR/system/xbin $TMPDIR/system/bin
+  [ -d "/system/priv-app" ] || mv -f $TMPDIR/system/priv-app $TMPDIR/system/app 2>/dev/null
+  [ -d "/system/xbin" ] || mv -f $TMPDIR/system/xbin $TMPDIR/system/bin 2>/dev/null
   if $DYNLIB; then
     for FILE in $(find $TMPDIR/system/lib*/* -maxdepth 0 -type d 2>/dev/null | sed -e "s|$TMPDIR/system/lib.*/modules||" -e "s|$TMPDIR/system/||"); do
       mkdir -p $(dirname $TMPDIR/system/vendor/$FILE)
