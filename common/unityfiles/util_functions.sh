@@ -6,7 +6,7 @@
 # Magisk util_functions is still used and will override any listed here
 # They're present for system installs
 #
-##########################################################################################                   
+##########################################################################################
 
 ###################
 # Helper Functions
@@ -115,31 +115,32 @@ recovery_cleanup() {
 }
 
 debug_log() {
+  $BOOTMODE && local LOG=/storage/emulated/0/$MODID-debug || local LOG=/data/media/0/$MODID-debug
   set +x
-  echo -e "***---Device Info---***" > /sdcard/$MODID-debug-tmp.log
-  echo -e "\n---Props---\n" >> /sdcard/$MODID-debug-tmp.log
-  getprop >> /sdcard/$MODID-debug-tmp.log
+  echo -e "***---Device Info---***" > $LOG-tmp.log
+  echo -e "\n---Props---\n" >> $LOG-tmp.log
+  getprop >> $LOG-tmp.log
   if $MAGISK; then
-    echo -e "\n\n***---Magisk Info---***" >> /sdcard/$MODID-debug-tmp.log
-    echo -e "\n---Magisk Version---\n\n$MAGISK_VER_CODE" >> /sdcard/$MODID-debug-tmp.log
-    imageless_magisk && { echo -e "\n---Installed Modules---\n" >> /sdcard/$MODID-debug-tmp.log;
-                                        ls $NVBASE/modules >> /sdcard/$MODID-debug-tmp.log; }
-    echo -e "\n---Last Magisk Log---\n" >> /sdcard/$MODID-debug-tmp.log
-    [ -d /cache ] && cat /cache/magisk.log >> /sdcard/$MODID-debug-tmp.log || cat /data/cache/magisk.log >> /sdcard/$MODID-debug-tmp.log
+    echo -e "\n\n***---Magisk Info---***" >> $LOG-tmp.log
+    echo -e "\n---Magisk Version---\n\n$MAGISK_VER_CODE" >> $LOG-tmp.log
+    imageless_magisk && { echo -e "\n---Installed Modules---\n" >> $LOG-tmp.log;
+                                        ls $NVBASE/modules >> $LOG-tmp.log; }
+    echo -e "\n---Last Magisk Log---\n" >> $LOG-tmp.log
+    [ -d /cache ] && cat /cache/magisk.log >> $LOG-tmp.log || cat /data/cache/magisk.log >> $LOG-tmp.log
   fi
-  echo -e "\n\n***---Unity Debug Info---***" >> /sdcard/$MODID-debug-tmp.log
-  echo -e "\n---Installed Files---\n" >> /sdcard/$MODID-debug-tmp.log
-  grep "^+* cp_ch" /sdcard/$MODID-debug.log | sed 's/.* //g' >> /sdcard/$MODID-debug-tmp.log
-  sed -i "\|$TMPDIR/|d" /sdcard/$MODID-debug-tmp.log
-  echo -e "\n---Installed Boot Scripts---\n" >> /sdcard/$MODID-debug-tmp.log
-  grep "^+* install_script" /sdcard/$MODID-debug.log | sed -e 's/.* //g' -e 's/^-.* //g' >> /sdcard/$MODID-debug-tmp.log
-  echo -e "\n---Installed Prop Files---\n" >> /sdcard/$MODID-debug-tmp.log
-  grep "^+* prop_process" /sdcard/$MODID-debug.log | sed 's/.* //g' >> /sdcard/$MODID-debug-tmp.log
-  echo -e "\n---Shell & Unity Variables---\n" >> /sdcard/$MODID-debug-tmp.log
-  (set) >> /sdcard/$MODID-debug-tmp.log
-  echo -e "\n---(Un)Install Log---\n" >> /sdcard/$MODID-debug-tmp.log
-  echo "$(cat /sdcard/$MODID-debug.log)" >> /sdcard/$MODID-debug-tmp.log
-  mv -f /sdcard/$MODID-debug-tmp.log /sdcard/$MODID-debug.log
+  echo -e "\n\n***---Unity Debug Info---***" >> $LOG-tmp.log
+  echo -e "\n---Installed Files---\n" >> $LOG-tmp.log
+  grep "^+* cp_ch" $LOG.log | sed 's/.* //g' >> $LOG-tmp.log
+  sed -i "\|$TMPDIR/|d" $LOG-tmp.log
+  echo -e "\n---Installed Boot Scripts---\n" >> $LOG-tmp.log
+  grep "^+* install_script" $LOG.log | sed -e 's/.* //g' -e 's/^-.* //g' >> $LOG-tmp.log
+  echo -e "\n---Installed Prop Files---\n" >> $LOG-tmp.log
+  grep "^+* prop_process" $LOG.log | sed 's/.* //g' >> $LOG-tmp.log
+  echo -e "\n---Shell & Unity Variables---\n" >> $LOG-tmp.log
+  (set) >> $LOG-tmp.log
+  echo -e "\n---(Un)Install Log---\n" >> $LOG-tmp.log
+  echo "$(cat $LOG.log)" >> $LOG-tmp.log
+  mv -f $LOG-tmp.log $LOG.log
 }
 
 cleanup() {
@@ -296,7 +297,7 @@ set_vars() {
   fi
   SYS=/system; VEN=/system/vendor; RD=$TMPDIR/addon/AnyKernel3/ramdisk; INFORD="$RD/$MODID-files"; SHEBANG="#!/system/bin/sh"
   [ $API -lt 26 ] && DYNLIB=false
-  $DYNLIB && { LIBPATCH="\/vendor"; LIBDIR=$VEN; } || { LIBPATCH="\/system"; LIBDIR=/system; }  
+  $DYNLIB && { LIBPATCH="\/vendor"; LIBDIR=$VEN; } || { LIBPATCH="\/system"; LIBDIR=/system; }
   if ! $MAGISK || $SYSOVER; then
     UNITY=""
     [ -d /system/addon.d ] && INFO=/system/addon.d/$MODID-files || INFO=/system/etc/$MODID-files
@@ -504,7 +505,7 @@ center_and_print() {
         SPACES="${SPACES} "
       done
     fi
-    if [ $(((41-$CHARS) % 2)) -eq 1 ]; then 
+    if [ $(((41-$CHARS) % 2)) -eq 1 ]; then
       ui_print "    *$SPACES$NEW${SPACES} *"
     else
       ui_print "    *$SPACES$NEW$SPACES*"
@@ -531,10 +532,10 @@ unity_install() {
 
   # Run user install script
   [ -f "$TMPDIR/common/unity_install.sh" ] && . $TMPDIR/common/unity_install.sh
-  
+
   # Install Addons
   run_addons -i
-  
+
   # Check sizes in case compression was used anywhere in zip
   if $MAGISK && ! $SYSOVER; then
     if ! imageless_magisk; then
@@ -549,15 +550,15 @@ unity_install() {
       fi
     fi
   fi
-  
+
   # Remove comments from files
   for i in $TMPDIR/common/sepolicy.sh $TMPDIR/common/system.prop $TMPDIR/common/service.sh $TMPDIR/common/post-fs-data.sh; do
     [ -f $i ] && sed -i -e "/^#/d" -e "/^ *$/d" $i
   done
-  
+
   # Sepolicy
   $DIRSEPOL && [ ! -d $TMPDIR/addon/AnyKernel3 ] && { ui_print "   ! AK3 required but not found!"; ui_print "   ! It's required for direct sepolicy patching"; ui_print "   ! Will use boot script instead"; DIRSEPOL=false; }
-  
+
   if ! $DIRSEPOL && [ -s $TMPDIR/common/sepolicy.sh ]; then
     [ "$NVBASE" == "/system/etc/init.d" -o "$MAGISK" == "true" ] && echo -n "magiskpolicy --live" >> $TMPDIR/common/service.sh || echo -n "supolicy --live" >> $TMPDIR/common/service.sh
     sed -i -e '/^#.*/d' -e '/^$/d' $TMPDIR/common/sepolicy.sh
@@ -572,7 +573,7 @@ unity_install() {
   fi
 
   ui_print "   Installing scripts and files for $ARCH SDK $API device..."
-  
+
   # Custom uninstaller
   $MAGISK && [ -f $TMPDIR/uninstall.sh ] && install_script $TMPDIR/uninstall.sh $MODPATH/uninstall.sh
 
@@ -589,7 +590,7 @@ unity_install() {
 
   # Service mode scripts
   [ -s $TMPDIR/common/service.sh ] && install_script -l $TMPDIR/common/service.sh
-  
+
   # Install files
   $IS64BIT || rm -rf $TMPDIR/system/lib64 $TMPDIR/system/vendor/lib64
   [ -d "/system/priv-app" ] || mv -f $TMPDIR/system/priv-app $TMPDIR/system/app 2>/dev/null
@@ -608,7 +609,7 @@ unity_install() {
     sed -i "s/MODID=.*/MODID=$MODID/" $TMPDIR/common/unityfiles/addon.sh
     cp_ch -n $TMPDIR/common/unityfiles/addon.sh $UNITY/system/addon.d/98-$MODID-unity.sh 0755
   fi
-  
+
   # Install scripts and module info
   cp_ch -n $TMPDIR/module.prop $MOD_VER
   if $MAGISK; then
@@ -649,7 +650,7 @@ unity_install() {
 unity_uninstall() {
   ui_print " "
   ui_print "- Uninstalling"
-  
+
   # Uninstall Addons
   run_addons -u
 
@@ -665,7 +666,7 @@ unity_uninstall() {
 
   # Run user install script
   [ -f "$TMPDIR/common/unity_uninstall.sh" ] && . $TMPDIR/common/unity_uninstall.sh
-  
+
   # Postuninstall Addons
   run_addons -v
 
@@ -691,7 +692,7 @@ comp_check() {
     [ "$MINAPI" ] && api_check -n $MINAPI
     [ "$MAXAPI" ] && api_check -x $MAXAPI
   fi
-  
+
   if [ -z $MAGISKBIN ]; then
     MAGISK=false
   else
@@ -715,18 +716,23 @@ unity_main() {
   if $DEBUG; then
     ui_print " "
     ui_print "- Debug mode"
-    ui_print "  Debug log will be written to: /sdcard/$MODID-debug.log"
-    exec 2>/sdcard/$MODID-debug.log
+    if $BOOTMODE; then
+      ui_print "  Debug log will be written to: /storage/emulated/0/$MODID-debug.log"
+      exec 2>/storage/emulated/$MODID-debug.log
+    else
+      ui_print "  Debug log will be written to: /data/media/$MODID-debug.log"
+      exec 2>/data/media/$MODID-debug.log
+    fi
     set -x
   fi
 
   # Main addons
   [ -f "$TMPDIR/addon.tar.xz" ] && tar -xf $TMPDIR/addon.tar.xz -C $TMPDIR 2>/dev/null
   run_addons -m
-  
+
   # Load user vars/function
   unity_custom
-  
+
   # Determine mod installation status
   ui_print " "
   if $MAGISK && ! $SYSOVER && [ -f "/system/addon.d/$MODID-files" -o -f "/system/etc/$MODID-files" ]; then
@@ -755,7 +761,7 @@ unity_main() {
 }
 
 SKIPMOUNT=false; SYSOVER=false; DEBUG=false; DYNLIB=false; SEPOLICY=false; DIRSEPOL=false
-OIFS=$IFS; IFS=\|; 
+OIFS=$IFS; IFS=\|;
 case $(echo $(basename "$ZIPFILE") | tr '[:upper:]' '[:lower:]') in
   *debug*) DEBUG=true;;
   *sysover*) SYSOVER=true;;
