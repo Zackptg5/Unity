@@ -30,6 +30,11 @@
   </h3>
 </div>
 
+## Use 
+To make your mod just download the source or ```git clone https://github.com/Zackptg5/Unity.git```
+
+If you need to use [add-ons](https://github.com/Zackptg5/Unity-Addons) ``` git clone --recursive https://github.com/Zackptg5/Unity.git```
+
 ## Compatibility
 - Magisk 19.0 +
 - All other root or rootless solutions (init.d support for boot scripts is required if not using Magisk or SuperSU. Try [Init.d Injector](https://forum.xda-developers.com/android/software-hacking/mod-universal-init-d-injector-wip-t3692105))
