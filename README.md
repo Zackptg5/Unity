@@ -1,4 +1,4 @@
-<h1>Deprecated - Every other root method is dead now other than magisk so this has been replaced by <a href=https://github.com/Zackptg5/MMT-Extended">MMT-EX</a></h1>
+<h1>Deprecated - Every other root method is dead now other than magisk so this has been replaced by <a href=https://github.com/Zackptg5/MMT-Extended>MMT-EX</a></h1>
 
 <h1 align="center">Unity (Un)Installer Template</h1>
 
